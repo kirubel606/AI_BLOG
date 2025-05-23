@@ -39,6 +39,17 @@ INSTALLED_APPS = [
     'accounts',
     'blogs',
     'corsheaders',
+    'contact_us',
+    'collaborations',
+    'settings',
+    'faq',
+    'resources',
+    'rnd',
+    'about_us',
+    'categories',
+    'events',
+    'news',
+    'quotes',
 ]
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
