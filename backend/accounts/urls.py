@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from .serializers import MyTokenObtainPairView
-from .views import SignupView, UserDetailView, UsersListView
+from accounts.views import SignupView, UserDetailView, UsersListView
 
 
 urlpatterns = [

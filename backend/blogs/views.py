@@ -10,8 +10,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Applaud, Blog, Comment, ReadingList
-from .pagination import CustomPageNumberPagination
-from .serializers import (ApplaudSerializer, BlogSerializer, CommentSerializer,
+from blogs.pagination import CustomPageNumberPagination
+from blogs.serializers import (ApplaudSerializer, BlogSerializer, CommentSerializer,
                           ReadingListSerializer)
 
 

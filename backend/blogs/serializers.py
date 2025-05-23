@@ -1,6 +1,6 @@
 from rest_framework.serializers import CharField, ImageField, SlugField, RelatedField, ModelSerializer
 
-from .models import Applaud, Blog, Comment, ReadingList
+from blogs.models import Applaud, Blog, Comment, ReadingList
 
 
 class BlogSerializer(ModelSerializer):

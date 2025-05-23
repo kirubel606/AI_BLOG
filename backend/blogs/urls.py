@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (AllBlogsListView, ApplaudDetailView, ApplaudPostView,
+from blogs.views import (AllBlogsListView, ApplaudDetailView, ApplaudPostView,
                     BlogDetailView, BlogPostView, CommentDetailView,
                     CommentPostView, CommentsAggregateView, CommentsListView,
                     ReadingListDetailView, ReadingListListView,
