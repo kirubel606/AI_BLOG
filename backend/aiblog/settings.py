@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-mc9*e6(8sa18d!+jl8b0ttvc!wp-fa#+mo4gcz9g=2c@vr=cyv'
-
+BLOG_IMAGE_DIR_NAME = 'blog_images'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
