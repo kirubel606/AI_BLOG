@@ -21,7 +21,7 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('accounts.urls')),
-    path('api/blogs/', include('blogs.urls')),
+    path('news/', include('news.urls')),
     path('collaborations/', include('collaborations.urls')),
     path('settings/', include('settings.urls')),
     path('contacts/', include('contact_us.urls')),
@@ -31,6 +31,5 @@ urlpatterns = [
     path('about/', include('about_us.urls')),
     path('categories/', include('categories.urls')),
     path('events/', include('events.urls')),
-    path('news/', include('news.urls')),
     path('quotes/', include('quotes.urls')),
 ]

@@ -1,7 +1,53 @@
-from rest_framework import serializers
-from .models import News
+from rest_framework.serializers import CharField, ImageField, SlugField, RelatedField, ModelSerializer
 
-class NewsSerializer(serializers.ModelSerializer):
+from news.models import Applaud, News, Comment, ReadingList
+
+
+class NewsSerializer(ModelSerializer):
+
+    author_username = CharField(source='author.username', read_only=True)
+    author_profile_image = ImageField(
+        source='author.profile_image', read_only=True)
+
     class Meta:
         model = News
+        fields = ['id', 'title', 'slug', 'subtitle', 'images', 'content', 'category', 'created_at',
+                  'status', 'applaud_count', 'author', 'author_username', 'author_profile_image']
+
+    def update(self, instance, validated_data):
+        # Allowed update fields are: [title, subtitle, cover_image, content, category, status]
+
+        for key, data in validated_data.items():
+            if key == 'images':
+                instance.images.delete(save=False)
+            setattr(instance, key, data)
+
+        instance.save()
+
+        return instance
+
+
+class CommentSerializer(ModelSerializer):
+
+    user_username = CharField(source='user.username', read_only=True)
+    user_profile_image = ImageField(
+        source='user.profile_image', read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+
+class ApplaudSerializer(ModelSerializer):
+
+    class Meta:
+        model = Applaud
+        fields = '__all__'
+
+
+class ReadingListSerializer(ModelSerializer):
+    news_details = NewsSerializer(source='news', read_only=True)
+
+    class Meta:
+        model = ReadingList
         fields = '__all__'

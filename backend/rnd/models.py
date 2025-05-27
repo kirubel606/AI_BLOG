@@ -1,4 +1,5 @@
 from django.db import models
+from categories.models import Category
 
 class RND(models.Model):
     TYPE_CHOICES = [
@@ -9,9 +10,11 @@ class RND(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
-    category = models.CharField(max_length=100)
+    category = models.ForeignKey(Category,null=True,blank=True,on_delete=models.SET_NULL, related_name='rnd_items')
     link = models.URLField()
-    images = models.ImageField(upload_to='rnd/')
+    coverimage = models.ImageField(upload_to='rnd/',null=True,blank=True)
+    logo = models.ImageField(upload_to='rnd/',null=True,blank=True)
+    images = models.ImageField(upload_to='rnd/',null=True,blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     author = models.CharField(max_length=100, null=True) 
     tags = models.CharField(max_length=255, null=True)
