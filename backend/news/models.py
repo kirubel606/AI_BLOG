@@ -58,14 +58,11 @@ class Comment(models.Model):
     class Meta:
         ordering = ('-created_at',)
 
-    id = models.CharField(primary_key=True, max_length=36,
-                          default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, max_length=36,default=uuid.uuid4, editable=False)
     content = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
-    news = models.ForeignKey(
-        News, on_delete=models.CASCADE,null=True,blank=True, related_name='comments')
-    user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, related_name='comments')
+    news = models.ForeignKey(News, on_delete=models.CASCADE,null=True,blank=True, related_name='comments')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='comments')
 
     def __str__(self) -> str:
         return f'{self.news}-{self.user}'
