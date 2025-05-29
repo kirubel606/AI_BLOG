@@ -34,7 +34,7 @@ class News(models.Model):
     category = models.ForeignKey(Category,blank=True,on_delete=models.SET_NULL, null=True,related_name='news_items')
     created_at = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.DRAFT)
-    applaud_count = models.PositiveIntegerField(default=0)
+    view_count = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name='news_posts')
 
@@ -53,40 +53,3 @@ def delete_cover_image(sender, instance, **kwargs):
         instance.cover_image.delete(save=False)
 
 
-class Comment(models.Model):
-
-    class Meta:
-        ordering = ('-created_at',)
-
-    id = models.CharField(primary_key=True, max_length=36,default=uuid.uuid4, editable=False)
-    content = models.TextField(max_length=1000)
-    created_at = models.DateTimeField(auto_now_add=True)
-    news = models.ForeignKey(News, on_delete=models.CASCADE,null=True,blank=True, related_name='comments')
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='comments')
-
-    def __str__(self) -> str:
-        return f'{self.news}-{self.user}'
-
-
-class Applaud(models.Model):
-
-    news = models.ForeignKey(News, on_delete=models.CASCADE,null=True,blank=True ,related_name='applauds')
-    user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, related_name='applauds')
-
-    def __str__(self) -> str:
-        return f'{self.news}-{self.user}'
-
-
-class ReadingList(models.Model):
-
-    class Meta:
-        ordering = ('-date_added',)
-
-    news = models.ForeignKey(News, on_delete=models.CASCADE,null=True,blank=True, related_name='reading_list')
-    user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, related_name='reading_list')
-    date_added = models.DateTimeField(default=timezone.now)
-
-    def __str__(self) -> str:
-        return f'{self.news}-{self.user}'

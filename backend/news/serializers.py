@@ -1,6 +1,5 @@
 from rest_framework.serializers import CharField, ImageField, SlugField, RelatedField, ModelSerializer
-
-from news.models import Applaud, News, Comment, ReadingList
+from news.models import  News
 
 
 class NewsSerializer(ModelSerializer):
@@ -26,28 +25,3 @@ class NewsSerializer(ModelSerializer):
 
         return instance
 
-
-class CommentSerializer(ModelSerializer):
-
-    user_username = CharField(source='user.username', read_only=True)
-    user_profile_image = ImageField(
-        source='user.profile_image', read_only=True)
-
-    class Meta:
-        model = Comment
-        fields = '__all__'
-
-
-class ApplaudSerializer(ModelSerializer):
-
-    class Meta:
-        model = Applaud
-        fields = '__all__'
-
-
-class ReadingListSerializer(ModelSerializer):
-    news_details = NewsSerializer(source='news', read_only=True)
-
-    class Meta:
-        model = ReadingList
-        fields = '__all__'
