@@ -8,12 +8,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.text import slugify
-
-
-def upload_to_path(instance: 'News', filename: str) -> str:
-    user_id: str = instance.author.id
-    news_id: str = instance.id
-    return f'{settings.NEWS_IMAGE_DIR_NAME}/{user_id}-{news_id}-{filename}'
+from django.core.validators import URLValidator
 
 
 class News(models.Model):
@@ -29,15 +24,16 @@ class News(models.Model):
     title = models.CharField(max_length=225, unique=True)
     slug = models.SlugField(max_length=250, null=True, blank=True)
     subtitle = models.CharField(max_length=300, null=True, blank=True)
-    images = models.ImageField(upload_to=upload_to_path, max_length=200, blank=True, null=True)
+    cover_image = models.ImageField(upload_to='news/', max_length=200, blank=True, null=True)
+    
+    iframe = models.TextField(blank=True, null=True)
     content = models.TextField()
     category = models.ForeignKey(Category,blank=True,on_delete=models.SET_NULL, null=True,related_name='news_items')
     created_at = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.DRAFT)
     view_count = models.PositiveIntegerField(default=0)
-    author = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, related_name='news_posts')
-
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='news_posts')
+    
     def save(self, *args, **kwargs) -> None:
         self.slug = slugify(self.title)
 
@@ -47,9 +43,22 @@ class News(models.Model):
         return self.title
 
 
+
+class NewsImage(models.Model):
+    news = models.ForeignKey(News, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='news/', blank=True, null=True)
+
+    def __str__(self):
+        return f"Image for {self.news.title}"
+
+
 @receiver(post_delete, sender=News)
 def delete_cover_image(sender, instance, **kwargs):
     if instance.cover_image:
         instance.cover_image.delete(save=False)
 
 
+@receiver(post_delete, sender=NewsImage)
+def delete_news_image_file(sender, instance, **kwargs):
+    if instance.image:
+        instance.image.delete(save=False)

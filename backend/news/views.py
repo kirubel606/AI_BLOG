@@ -105,7 +105,7 @@ class NewsDetailView(APIView):
             if news.author.id != request.user.id:
                 return Response(data={'message': 'You are unauthorized to update the requested news'}, status=status.HTTP_401_UNAUTHORIZED)
 
-            news_serializer = Newserializer(
+            news_serializer = NewsSerializer(
                 instance=news, data=request.data, partial=True)
             if news_serializer.is_valid(raise_exception=True):
                 news_serializer.save()
