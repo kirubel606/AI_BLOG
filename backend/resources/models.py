@@ -5,6 +5,7 @@ from categories.models import Category
 class Resource(models.Model):
     CLASSIFICATION_CHOICES = [
      ('publication', 'Publication'),
+     ('resource', 'Resource'),
      ('case_study', 'Case Study'),
      ('development', 'Development'),
     ]

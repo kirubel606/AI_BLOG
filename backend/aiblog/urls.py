@@ -35,6 +35,8 @@ urlpatterns = [
     path('categories/', include('categories.urls')),
     path('events/', include('events.urls')),
     path('quotes/', include('quotes.urls')),
+    path('gallery/', include('gallery.urls')),
+    path('vacancy/', include('vacancy.urls')),
 ]
 
 if settings.DEBUG:
