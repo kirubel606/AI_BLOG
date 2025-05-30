@@ -1,5 +1,7 @@
 from rest_framework.serializers import CharField, ImageField,SlugField, RelatedField, ModelSerializer
 from news.models import  News,NewsImage
+from categories.models import Category
+from rest_framework.serializers import SlugRelatedField
 from rest_framework import serializers
 from rest_framework.fields import URLField
 
@@ -15,6 +17,7 @@ class NewsSerializer(ModelSerializer):
 
     # New fields
     images = NewsImageSerializer(many=True, read_only=True)
+    category = SlugRelatedField(slug_field='name', queryset=Category.objects.all())
 
     class Meta:
         model = News
