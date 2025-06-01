@@ -24,7 +24,7 @@ class NewsSerializer(ModelSerializer):
         fields = [
             'id', 'title', 'slug', 'subtitle', 'cover_image', 'content',
             'category', 'created_at', 'status', 'view_count', 'author',
-            'author_username', 'author_profile_image', 'images', 'iframe'  # <--- Added here
+            'author_username', 'author_profile_image', 'images', 'iframe','tags'  # <--- Added here
         ]
 
     def create(self, validated_data):

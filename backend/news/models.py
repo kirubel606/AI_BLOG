@@ -29,6 +29,7 @@ class News(models.Model):
     iframe = models.TextField(blank=True, null=True)
     content = models.TextField()
     category = models.ForeignKey(Category,blank=True,on_delete=models.SET_NULL, null=True,related_name='news_items')
+    tags = models.CharField(max_length=300, null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.DRAFT)
     view_count = models.PositiveIntegerField(default=0)

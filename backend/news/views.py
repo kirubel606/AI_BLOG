@@ -8,9 +8,11 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import  News
 from news.pagination import CustomPageNumberPagination
 from news.serializers import (NewsSerializer)
+from django.db.models import Q
 
 
 class AllNewsListView(APIView):
@@ -85,10 +87,13 @@ class UserNewsListView(APIView):
 
 
 class NewsDetailView(APIView):
-
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     def get(self, request: Request, news_id: uuid) -> Response:
         try:
@@ -126,3 +131,25 @@ class NewsDetailView(APIView):
             return Response(data={'message': 'News deleted successfully'}, status=status.HTTP_200_OK)
         except News.DoesNotExist:
             return Response(data={'message': 'News does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class NewsRelatedView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, news_id):
+        try:
+            main_news = News.objects.get(pk=news_id)
+        except News.DoesNotExist:
+            return Response({'message': 'News not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Split tags by comma and trim whitespace
+        tag_list = [tag.strip().lower() for tag in (main_news.tags or "").split(",") if tag.strip()]
+
+        # Build query
+        related_news = News.objects.filter(
+            Q(category=main_news.category) |
+            Q(tags__iregex=r'(' + '|'.join(tag_list) + ')')
+        ).exclude(id=news_id).distinct().order_by('-created_at')[:10]  # Limit to 10 related
+
+        serializer = NewsSerializer(related_news, many=True)
+        return Response({'related_news': serializer.data}, status=status.HTTP_200_OK)
