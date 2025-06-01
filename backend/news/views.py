@@ -152,4 +152,4 @@ class NewsRelatedView(APIView):
         ).exclude(id=news_id).distinct().order_by('-created_at')[:10]  # Limit to 10 related
 
         serializer = NewsSerializer(related_news, many=True)
-        return Response({'related_news': serializer.data}, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
