@@ -16,18 +16,37 @@ from django.db.models import Q
 
 
 class AllNewsListView(APIView):
+    def get(self, request: Request) -> Response:
+        category = request.query_params.get("category", None)
+
+        # Filter only published content
+        query = Q(status="publish")
+        if category:
+            query &= Q(category=category)
+
+        # News and Videos are the same model, distinguished by `iframe` field
+        items = News.objects.filter(query).order_by("-created_at")
+
+        paginator = CustomPageNumberPagination()
+        return paginator.generate_response(items, request)
+
+class SidebarNewsView(APIView):
+    permission_classes = [AllowAny]
 
     def get(self, request: Request) -> Response:
-        category: str = request.query_params.get('category', None)
+        # You can customize the number and filters here
+        sidebar_news = News.objects.filter(status='publish').order_by('-created_at')[:10]
+        serializer = NewsSerializer(sidebar_news, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        if category:
-            news = News.objects.filter(status='publish', category=category)
-        else:
-            news = News.objects.filter(status='publish')
+class MajorNewsListView(APIView):
+    permission_classes = [AllowAny]
 
-        total = news.count()
+    def get(self, request: Request) -> Response:
+        major_news = News.objects.filter(status='publish').order_by('-created_at')
+        total = major_news.count()
         paginator = CustomPageNumberPagination()
-        return paginator.generate_response(news, NewsSerializer, request, total)
+        return paginator.generate_response(major_news, NewsSerializer, request, total)
 
 
 class SearchNewsView(APIView):
