@@ -57,6 +57,10 @@ class NewsPostView(APIView):
         data['author'] = str(request.user.id)
 
         news_serializer = NewsSerializer(data=data)
+        news_serializer = NewsSerializer(
+                data=data,
+                context={'request': request}
+            )
         if news_serializer.is_valid(raise_exception=True):
             news_serializer.save()
             return Response(data={'message': 'News created successfully', 'news': news_serializer.data}, status=status.HTTP_201_CREATED)
@@ -112,6 +116,12 @@ class NewsDetailView(APIView):
 
             news_serializer = NewsSerializer(
                 instance=news, data=request.data, partial=True)
+            news_serializer = NewsSerializer(
+                instance=news,
+                data=request.data,
+                partial=True,
+                context={'request': request}
+            )
             if news_serializer.is_valid(raise_exception=True):
                 news_serializer.save()
                 return Response(data={'message': 'News updated successfully', 'news': news_serializer.data}, status=status.HTTP_200_OK)
