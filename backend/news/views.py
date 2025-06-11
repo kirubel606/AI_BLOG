@@ -102,6 +102,9 @@ class NewsDetailView(APIView):
     def get(self, request: Request, news_id: uuid) -> Response:
         try:
             news = News.objects.get(pk=news_id)
+            # Increment view count
+            news.view_count += 1
+            news.save(update_fields=['view_count'])
             news_serializer = NewsSerializer(instance=news)
             return Response(data=news_serializer.data, status=status.HTTP_200_OK)
         except News.DoesNotExist:
@@ -163,3 +166,4 @@ class NewsRelatedView(APIView):
 
         serializer = NewsSerializer(related_news, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
