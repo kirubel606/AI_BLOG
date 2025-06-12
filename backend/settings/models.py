@@ -6,4 +6,4 @@ class Setting(models.Model):
     line2 = models.CharField(max_length=255)
     email = models.EmailField()
     location = models.CharField(max_length=255)
-    map_link = models.URLField()
+    map_link = models.CharField()
