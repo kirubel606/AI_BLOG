@@ -1,7 +1,18 @@
 from rest_framework import serializers
-from .models import Event
+from .models import Event, EventImage
+
+class EventImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventImage
+        fields = ['id', 'image']
 
 class EventSerializer(serializers.ModelSerializer):
+    images = EventImageSerializer(many=True, read_only=True)
+
     class Meta:
         model = Event
-        fields = '__all__'
+        fields = [
+            'id', 'title', 'location', 'description', 'category', 'venue',
+            'video_link', 'is_live', 'timestamp', 'start_date', 'end_date',
+            'type', 'status', 'images'
+        ]

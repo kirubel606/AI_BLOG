@@ -1,8 +1,11 @@
 from django.contrib import admin
+from .models import Event, EventImage
 
-# Register your models here.
-from .models import Event
+class EventImageInline(admin.TabularInline):
+    model = EventImage
+    extra = 1  # Number of extra blank forms
 
-class UserAdmin(admin.ModelAdmin):
-    model = Event
-admin.site.register(Event, UserAdmin)
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    inlines = [EventImageInline]
+    list_display = ('title', 'location', 'start_date', 'end_date', 'status')
