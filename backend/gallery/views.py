@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from .models import Gallery
 from .serializers import GallerySerializer
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class IsAuthenticatedForUnsafeMethods(BasePermission):
     """
@@ -14,6 +15,7 @@ class IsAuthenticatedForUnsafeMethods(BasePermission):
 
 
 class GalleryViewSet(viewsets.ModelViewSet):
-    queryset = Gallery.objects.all().order_by('-created_at')  # Latest first
+    queryset = Gallery.objects.all().order_by('-created_at')
     serializer_class = GallerySerializer
     permission_classes = [IsAuthenticatedForUnsafeMethods]
+    parser_classes = [MultiPartParser, FormParser]  # 🔥 Add this line
