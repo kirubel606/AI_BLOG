@@ -8,4 +8,4 @@ class EventImageInline(admin.TabularInline):
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     inlines = [EventImageInline]
-    list_display = ('title', 'location', 'start_date', 'end_date', 'status')
+    list_display = ('title','title_am', 'location','location_am', 'start_date', 'end_date', 'status')

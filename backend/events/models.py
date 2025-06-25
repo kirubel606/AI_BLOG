@@ -16,7 +16,8 @@ class Event(models.Model):
 
     title = models.CharField(max_length=255,null=True,blank=True)
     title_am = models.CharField(max_length=300,null=True,blank=True)
-    location = models.CharField(max_length=255)
+    location = models.CharField(max_length=255,null=True,blank=True)
+    location_am = models.CharField(max_length=255,null=True,blank=True)
     description = models.TextField(null=True,blank=True)
     description_am = models.TextField(null=True,blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
