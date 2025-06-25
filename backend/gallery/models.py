@@ -7,11 +7,14 @@ class Gallery(models.Model):
         ('SUMMER_CAMP', 'Summer Camp'),
         ('MOU', 'MOU'),
     ]
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,null=True,blank=True)
+    title_am = models.CharField(max_length=255,null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)  # ⏱️ Timestamp
     caption = models.CharField(max_length=400, blank=True)
+    caption_am = models.CharField(max_length=400,null=True,blank=True)
     category = models.CharField( max_length=100, choices=CATEGORY_CHOICES, null=True, blank=True    ) 
     discription = models.TextField(null=True,blank=True)  # 📜 Description
+    discription_am = models.TextField(null=True,blank=True)  # 📜 Description
 
 
     def __str__(self):

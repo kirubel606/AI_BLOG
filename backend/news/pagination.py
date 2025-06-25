@@ -19,7 +19,7 @@ class CustomPageNumberPagination(pagination.PageNumberPagination):
         video_items = [item for item in items if item.iframe]
 
         # Build pages with 2 news + 1 video per page
-        per_page = 3
+        per_page = 6
         grouped_items = []
 
         max_groups = max(

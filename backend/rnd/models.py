@@ -8,10 +8,12 @@ class RND(models.Model):
         ('case_study', 'Case Study'),
     ]
 
-    title = models.CharField(max_length=255)
-    description = models.TextField()
+    title = models.CharField(max_length=255,blank=True, null=True)
+    title_am = models.CharField(max_length=255,blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    description_am = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL, related_name='rnd_items')
-    link = models.URLField()
+    link = models.URLField(blank=True, null=True)
     coverimage = models.ImageField(upload_to='rnd/', null=True, blank=True)
     logo = models.ImageField(upload_to='rnd/', null=True, blank=True)
 
@@ -19,7 +21,8 @@ class RND(models.Model):
     images = models.TextField(null=True, blank=True)
 
     timestamp = models.DateTimeField(auto_now_add=True)
-    author = models.CharField(max_length=100, null=True)
+    author = models.CharField(max_length=100, blank=True, null=True)
+    author_am = models.CharField(max_length=100, blank=True, null=True)
     tags = models.CharField(max_length=255, null=True)
     type = models.CharField(
         max_length=20,

@@ -8,7 +8,23 @@ class GalleryImageInline(admin.TabularInline):
 
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
-    list_display = ['title', 'created_at']
-    search_fields = ['title']
-    list_filter = ['created_at']
+    list_display = ['title', 'title_am', 'category', 'created_at']
+    search_fields = ['title', 'title_am', 'caption', 'caption_am']
+    list_filter = ['category', 'created_at']
     inlines = [GalleryImageInline]
+    fieldsets = (
+        (None, {
+            'fields': (
+                'title', 'title_am',
+                'caption', 'caption_am',
+                'discription', 'discription_am',
+                'category'
+            )
+        }),
+    )
+
+def image_count(self, obj):
+    return obj.images.count()
+image_count.short_description = 'Image Count'
+
+

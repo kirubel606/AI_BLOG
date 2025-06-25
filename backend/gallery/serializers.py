@@ -11,7 +11,7 @@ class GallerySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Gallery
-        fields = ["id", "title", "caption", "images", "created_at"]
+        fields = ["id", "title","title_am", "caption","caption_am","discription","discription_am", "images", "created_at"]
 
     def create(self, validated_data):
         images_data = self.context['request'].FILES.getlist('images')
@@ -42,7 +42,11 @@ class GallerySerializer(serializers.ModelSerializer):
             GalleryImage.objects.create(gallery=instance, image=image)
 
         instance.title = validated_data.get("title", instance.title)
+        instance.title_am = validated_data.get("title_am", instance.title)
         instance.caption = validated_data.get("caption", instance.caption)
+        instance.caption_am = validated_data.get("caption_am", instance.caption_am)
+        instance.discription = validated_data.get("discription", instance.discription)
+        instance.discription_am = validated_data.get("discription_am", instance.discription_am)
         instance.save()
 
         return instance

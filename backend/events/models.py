@@ -14,11 +14,14 @@ class Event(models.Model):
         ('cancelled', 'Cancelled'),
     ]
 
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,null=True,blank=True)
+    title_am = models.CharField(max_length=300,null=True,blank=True)
     location = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(null=True,blank=True)
+    description_am = models.TextField(null=True,blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
-    venue = models.CharField(max_length=255)
+    venue = models.CharField(max_length=255,null=True,blank=True)
+    venue_am = models.CharField(max_length=500,null=True,blank=True)
     video_link = models.URLField(blank=True, null=True)
     # Remove single image field
     # image = models.ImageField(upload_to='events/')

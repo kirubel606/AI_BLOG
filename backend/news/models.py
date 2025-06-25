@@ -21,13 +21,16 @@ class News(models.Model):
         PUBLISH = 'publish', 'PUBLISH'
 
     id = models.CharField(primary_key=True, max_length=36,default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=225, unique=True)
+    title = models.CharField(max_length=225, unique=True,null=True, blank=True)
+    title_am = models.CharField(max_length=225, unique=True,null=True, blank=True)
     slug = models.SlugField(max_length=250, null=True, blank=True)
     subtitle = models.CharField(max_length=300, null=True, blank=True)
+    subtitle_am = models.CharField(max_length=300, null=True, blank=True)
     cover_image = models.ImageField(upload_to='news/', max_length=200, blank=True, null=True)
     
     iframe = models.TextField(blank=True, null=True)
-    content = models.TextField()
+    content = models.TextField(null=True, blank=True)
+    content_am = models.TextField(null=True, blank=True)
     category = models.ForeignKey(Category,blank=True,on_delete=models.SET_NULL, null=True,related_name='news_items')
     tags = models.CharField(max_length=300, null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
