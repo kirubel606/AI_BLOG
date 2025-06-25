@@ -17,9 +17,8 @@ class NewsSerializer(ModelSerializer):
 
     # New fields
     images = NewsImageSerializer(many=True, read_only=True)
-    category = SlugRelatedField(slug_field='name', queryset=Category.objects.all())
-    category_am = SlugRelatedField(slug_field='name_am', queryset=Category.objects.all())
-
+    category = serializers.SlugRelatedField(slug_field='name', queryset=Category.objects.all())
+    category_am = serializers.SerializerMethodField()
     class Meta:
         model = News
         fields = [
@@ -27,6 +26,9 @@ class NewsSerializer(ModelSerializer):
             'category','category_am' ,'created_at', 'status', 'view_count', 'author',
             'author_username', 'author_profile_image', 'images', 'iframe','tags'  # <--- Added here
         ]
+    def get_category_am(self, obj):
+        return obj.category.name_am if obj.category else None
+
 
     def create(self, validated_data):
         images_data = self.context['request'].FILES.getlist('images')
