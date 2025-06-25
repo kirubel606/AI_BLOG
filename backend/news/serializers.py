@@ -18,12 +18,13 @@ class NewsSerializer(ModelSerializer):
     # New fields
     images = NewsImageSerializer(many=True, read_only=True)
     category = SlugRelatedField(slug_field='name', queryset=Category.objects.all())
+    category_am = SlugRelatedField(slug_field='name_am', queryset=Category.objects.all())
 
     class Meta:
         model = News
         fields = [
-            'id', 'title', 'slug', 'subtitle', 'cover_image', 'content',
-            'category', 'created_at', 'status', 'view_count', 'author',
+            'id', 'title','title_am', 'slug', 'subtitle','subtitle_am', 'cover_image', 'content','content_am',
+            'category','category_am' ,'created_at', 'status', 'view_count', 'author',
             'author_username', 'author_profile_image', 'images', 'iframe','tags'  # <--- Added here
         ]
 
