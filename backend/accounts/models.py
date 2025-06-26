@@ -15,6 +15,7 @@ class UserManager(BaseUserManager):
         other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_superuser', True)
         other_fields.setdefault('is_active', True)
+        other_fields.setdefault('is_admin', True)
 
         if other_fields.get('is_staff') is not True:
             raise ValueError('Superuser must be assigned to is_staff=True')
@@ -38,9 +39,8 @@ class UserManager(BaseUserManager):
 
 
 def upload_to_path(instance: 'User', filename: str) -> str:
-    user_id: str = instance.id
-    return f'{settings.PROFILE_IMAGE_DIR_NAME}/{user_id}-{filename}'
-
+    user_id: str = instance.id or 'new'  # fallback for unsaved users
+    return f'accounts/{user_id}-{filename}'
 
 class User(AbstractBaseUser, PermissionsMixin):
 
@@ -51,6 +51,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     profile_image = models.ImageField(
         upload_to=upload_to_path, max_length=300, null=True, blank=True)
 
