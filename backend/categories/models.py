@@ -7,6 +7,7 @@ class Category(models.Model):
     description = models.TextField(null=True,blank=True)
     description_am = models.TextField(null=True,blank=True)
     image = models.ImageField(upload_to='categories/')
+    is_core = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
