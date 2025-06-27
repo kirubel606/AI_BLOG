@@ -24,8 +24,6 @@ class Event(models.Model):
     venue = models.CharField(max_length=255,null=True,blank=True)
     venue_am = models.CharField(max_length=500,null=True,blank=True)
     video_link = models.URLField(blank=True, null=True)
-    # Remove single image field
-    # image = models.ImageField(upload_to='events/')
     is_live = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     start_date = models.DateTimeField(default=timezone.now)
