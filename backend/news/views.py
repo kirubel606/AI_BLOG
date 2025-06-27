@@ -108,13 +108,13 @@ class UserNewsListView(APIView):
                 news = News.objects.filter(author=request.user.id)
         if news_status == 'draft':
             if request.user.is_admin:
-                news = News.objects.all(status=news_status)
+                news = News.objects.filter(status=news_status)
             else:
                 news = News.objects.filter(
                     author=request.user.id, status=news_status)
         elif news_status == 'publish':
             if request.user.is_admin:
-                news = News.objects.all(status=news_status)
+                news = News.objects.filter(status=news_status)
             else:
                 news = News.objects.filter(
                     author=request.user.id, status=news_status)
