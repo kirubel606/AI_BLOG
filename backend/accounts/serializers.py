@@ -13,6 +13,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['username'] = user.username
         token['profile_image'] = user.profile_image.url if user.profile_image else None
+        token['id'] = user.id
+        token['is_admin'] = user.is_admin
         return token
 
 

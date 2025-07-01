@@ -13,7 +13,7 @@ from .models import  News
 from news.pagination import CustomPageNumberPagination
 from news.serializers import (NewsSerializer)
 from django.db.models import Q
-
+from django.contrib.auth.models import Permission
 
 class AllNewsListView(APIView):
     def get(self, request: Request) -> Response:
@@ -80,7 +80,12 @@ class NewsPostView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request: Request) -> Response:
-        data = request.data.copy()
+        if not request.user.has_perm('news.add_news'):  # replace `yourapp` with your actual app label
+            return Response(
+                {"detail": "You do not have permission to add news."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        data = request.data
         data['author'] = str(request.user.id)
 
         news_serializer = NewsSerializer(data=data)
@@ -94,7 +99,6 @@ class NewsPostView(APIView):
 
         return Response(data={'message': news_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-
 class UserNewsListView(APIView):
 
     authentication_classes = [JWTAuthentication]
@@ -103,15 +107,25 @@ class UserNewsListView(APIView):
     def get(self, request: Request) -> Response:
         news_status = request.query_params.get('status', None)
 
-        if not news_status:
+        if not news_status :
             return Response(data={'message': 'Query param `status` is not provided'}, status=status.HTTP_400_BAD_REQUEST)
-
+        if news_status  == 'all':
+            if request.user.is_admin:
+                news = News.objects.all()
+            else:
+                news = News.objects.filter(author=request.user.id)
         if news_status == 'draft':
-            news = News.objects.filter(
-                author=request.user.id, status=news_status)
+            if request.user.is_admin:
+                news = News.objects.filter(status=news_status)
+            else:
+                news = News.objects.filter(
+                    author=request.user.id, status=news_status)
         elif news_status == 'publish':
-            news = News.objects.filter(
-                author=request.user.id, status=news_status)
+            if request.user.is_admin:
+                news = News.objects.filter(status=news_status)
+            else:
+                news = News.objects.filter(
+                    author=request.user.id, status=news_status)
 
         news_serializer = NewsSerializer(instance=news, many=True)
         return Response(data=news_serializer.data, status=status.HTTP_200_OK)
@@ -128,6 +142,11 @@ class NewsDetailView(APIView):
 
     def get(self, request: Request, news_id: uuid) -> Response:
         try:
+            if not request.user.has_perm('news.view_news'):  # replace `yourapp` with your actual app label
+                return Response(
+                    {"detail": "You do not have permission to view news detail."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
             news = News.objects.get(pk=news_id)
             # Increment view count
             news.view_count += 1
@@ -139,6 +158,11 @@ class NewsDetailView(APIView):
 
     def put(self, request: Request, news_id: uuid) -> Response:
         try:
+            if not request.user.has_perm('news.change_news'):  # replace `yourapp` with your actual app label
+                return Response(
+                    {"detail": "You do not have permission to edit news."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
             news = News.objects.get(pk=news_id)
 
             if news.author.id != request.user.id:
@@ -162,6 +186,11 @@ class NewsDetailView(APIView):
 
     def delete(self, request: Request, news_id: uuid) -> Response:
         try:
+            if not request.user.has_perm('news.delete_news'):  # replace `yourapp` with your actual app label
+                return Response(
+                    {"detail": "You do not have permission to delete news."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
             news = News.objects.get(pk=news_id)
 
             if news.author.id != request.user.id:
