@@ -24,7 +24,7 @@ class NewsSerializer(ModelSerializer):
         fields = [
             'id', 'title','title_am', 'slug', 'subtitle','subtitle_am', 'cover_image', 'content','content_am',
             'category','category_am' ,'created_at', 'status', 'view_count', 'author',
-            'author_username', 'author_profile_image', 'images', 'iframe','tags'  # <--- Added here
+            'author_username', 'author_profile_image', 'images', 'iframe','tags','magazine','pdf_file'  # <--- Added here
         ]
     def get_category_am(self, obj):
         return obj.category.name_am if obj.category else None

@@ -37,6 +37,9 @@ class News(models.Model):
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.DRAFT)
     view_count = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='news_posts')
+    magazine = models.BooleanField(default=False, help_text="Is this news part of the digital magazine?")
+    pdf_file = models.FileField(upload_to='magazines/', blank=True, null=True, help_text="PDF file for the digital magazine")
+
     
     def save(self, *args, **kwargs) -> None:
         self.slug = slugify(self.title)

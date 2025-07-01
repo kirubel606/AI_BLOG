@@ -48,7 +48,15 @@ class MajorNewsListView(APIView):
         paginator = CustomPageNumberPagination()
         return paginator.generate_response(major_news, NewsSerializer, request, total)
 
+class MagazineListView(APIView):
+    permission_classes = [AllowAny]
 
+    def get(self, request):
+        magazines = News.objects.filter(status='publish', magazine=True).order_by('-created_at')
+        paginator = CustomPageNumberPagination()
+        return paginator.generate_response(magazines, request)
+
+    
 class SearchNewsView(APIView):
 
     authentication_classes = [JWTAuthentication]
