@@ -142,11 +142,6 @@ class NewsDetailView(APIView):
 
     def get(self, request: Request, news_id: uuid) -> Response:
         try:
-            # if not request.user.has_perm('news.view_news'):  # replace `yourapp` with your actual app label
-            #     return Response(
-            #         {"detail": "You do not have permission to view news detail."},
-            #         status=status.HTTP_403_FORBIDDEN
-            #     )
             news = News.objects.get(pk=news_id)
             # Increment view count
             news.view_count += 1

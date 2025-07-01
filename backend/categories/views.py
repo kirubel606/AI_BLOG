@@ -19,3 +19,6 @@ class CategoryListCreateView(generics.ListCreateAPIView):
 class CategoryRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True  # 👈 enables partial update
+        return super().update(request, *args, **kwargs)

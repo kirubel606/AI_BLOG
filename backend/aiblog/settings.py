@@ -31,7 +31,6 @@ DEBUG = True
 CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = 'accounts.User'
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -69,8 +68,14 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Your custom middleware should come before Clickjacking
+    'aiblog.middleware.media_xframe.MediaXFrameMiddleware',
+
+    # Then optionally keep or remove this
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.views.decorators.clickjacking.xframe_options_sameorigin',
 ]
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 ROOT_URLCONF = 'aiblog.urls'
 

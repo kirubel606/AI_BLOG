@@ -12,3 +12,6 @@ class FAQRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = FAQ.objects.all()
     serializer_class = FAQSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True  # 👈 enables partial update
+        return super().update(request, *args, **kwargs)

@@ -12,3 +12,7 @@ class AboutUsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = AboutUs.objects.all()
     serializer_class = AboutUsSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    def update(self, request, *args, **kwargs):
+        # Force partial update even on PUT
+        kwargs['partial'] = True
+        return super().update(request, *args, **kwargs)
