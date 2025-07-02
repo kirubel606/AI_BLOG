@@ -14,17 +14,45 @@ from news.pagination import CustomPageNumberPagination
 from news.serializers import (NewsSerializer)
 from django.db.models import Q
 from django.contrib.auth.models import Permission
+from django.utils.dateparse import parse_date
 
 class AllNewsListView(APIView):
     def get(self, request: Request) -> Response:
-        category = request.query_params.get("category", None)
-
-        # Filter only published content
+        filtercategory = request.query_params.get("category")
+        date_from = request.query_params.get("date_from")
+        date_to = request.query_params.get("date_to")
+        magazine = request.query_params.get("magazine")
+        iframe = request.query_params.get("iframe")
+        search = request.query_params.get("search")
         query = Q(status="publish")
-        if category:
-            query &= Q(category=category)
 
-        # News and Videos are the same model, distinguished by `iframe` field
+        if filtercategory:
+            query &= Q(category=filtercategory)
+        if search:
+            query &= Q(title__icontains=search) | Q(title_am__icontains=search) | Q(subtitle__icontains=search)
+            
+        if magazine is not None:
+            if magazine.lower() == "true":
+                query &= Q(magazine=True)
+            elif magazine.lower() == "false":
+                query &= Q(magazine=False)
+
+        if iframe is not None:
+            if iframe.lower() == "true":
+                query &= Q(iframe__isnull=False) & ~Q(iframe="")
+            elif iframe.lower() == "false":
+                query &= Q(iframe__isnull=True) | Q(iframe="")
+
+        if date_from:
+            parsed_date = parse_date(date_from)
+            if parsed_date:
+                query &= Q(created_at__date__gte=parsed_date)
+
+        if date_to:
+            parsed_date = parse_date(date_to)
+            if parsed_date:
+                query &= Q(created_at__date__lte=parsed_date)
+
         items = News.objects.filter(query).order_by("-created_at")
 
         paginator = CustomPageNumberPagination()
