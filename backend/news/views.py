@@ -102,30 +102,35 @@ class SearchNewsView(APIView):
     
 
 class NewsPostView(APIView):
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request: Request) -> Response:
-        if not request.user.has_perm('news.add_news'):  # replace `yourapp` with your actual app label
+        if not request.user.has_perm('news.add_news'):
             return Response(
                 {"detail": "You do not have permission to add news."},
                 status=status.HTTP_403_FORBIDDEN
             )
-        data = request.data
-        data['author'] = str(request.user.id)
-
-        news_serializer = NewsSerializer(data=data)
-        news_serializer = NewsSerializer(
-                data=data,
-                context={'request': request}
+        
+        # Make request.data mutable safely
+        data = request.data.dict()  # returns normal dict, but loses FILES!
+        
+        # Better: use request.data as-is and override validated_data in serializer if needed
+        serializer = NewsSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        
+        # Attach user id during serializer save instead
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(author=request.user)  # Better to pass instance or field
+            return Response(
+                data={'message': 'News created successfully', 'news': serializer.data},
+                status=status.HTTP_201_CREATED
             )
-        if news_serializer.is_valid(raise_exception=True):
-            news_serializer.save()
-            return Response(data={'message': 'News created successfully', 'news': news_serializer.data}, status=status.HTTP_201_CREATED)
 
-        return Response(data={'message': news_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={'message': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserNewsListView(APIView):
 
