@@ -12,4 +12,4 @@ class Setting(models.Model):
     linkdin = models.URLField(null=True,blank=True)
     location = models.CharField(max_length=255,blank=True, null=True)
     location_am = models.CharField(max_length=255,blank=True, null=True)
-    map_link = models.CharField()
+    map_link = models.CharField(max_length=5000)
