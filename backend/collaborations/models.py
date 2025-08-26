@@ -6,6 +6,7 @@ class Collaboration(models.Model):
     logo = models.ImageField(upload_to='collaborations/')
     category = models.ForeignKey(Category,blank=True,on_delete=models.SET_NULL, null=True,related_name='collab_items')
     link = models.URLField(null=True,blank=True)
+    is_local = models.BooleanField(default=True)
 
     def __str__(self):
         return self.category.name if self.category else "No Category"
