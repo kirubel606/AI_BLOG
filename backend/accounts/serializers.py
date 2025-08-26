@@ -72,6 +72,14 @@ class UserSerializer(ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
+        request = self.context.get('request')
+        
+        # Prevent non-superusers from changing sensitive fields
+        if not (request and request.user and request.user.is_superuser):
+            validated_data.pop('is_admin', None)
+            validated_data.pop('is_staff', None)
+            validated_data.pop('is_superuser', None)
+
         perms = validated_data.pop('permissions', None)
         for k, v in validated_data.items():
             if k == 'profile_image':
@@ -79,6 +87,7 @@ class UserSerializer(ModelSerializer):
             if k == 'password':
                 instance.set_password(v); continue
             setattr(instance, k, v)
+
         instance.save()
         if perms is not None:
             instance.user_permissions.set(perms)
