@@ -8,6 +8,9 @@ class Resource(models.Model):
      ('resource', 'Resource'),
      ('case_study', 'Case Study'),
      ('development', 'Development'),
+     ('patents', 'Patents'),
+     ('dataset', 'Dataset'),
+     ('tool', 'Tool'),
     ]
     title = models.CharField(max_length=255,blank=True, null=True)
     title_am = models.CharField(max_length=255,blank=True, null=True)
