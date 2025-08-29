@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'quotes',
     'gallery',
     'vacancy',
+    'training',
 ]
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
